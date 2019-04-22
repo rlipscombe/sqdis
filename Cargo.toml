@@ -5,3 +5,4 @@ authors = ["Roger Lipscombe <roger@differentpla.net>"]
 edition = "2018"
 
 [dependencies]
+nom = "^4.2"
