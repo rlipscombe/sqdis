@@ -31,6 +31,16 @@ named!(
 struct FunctionProto {
     literals: Vec<String>,
     instructions: Vec<Instruction>,
+    functions: Vec<FunctionProto>,
+}
+
+#[derive(Debug)]
+struct Instruction {
+    op: u8,
+    arg0: u8,
+    arg1: u32,
+    arg2: u8,
+    arg3: u8,
 }
 
 named!(
@@ -63,13 +73,14 @@ named!(
             >> tag!("TRAP")
             >> instructions: count!(parse_instruction, ninstructions as usize)
             >> tag!("TRAP")
-            >> count!(parse_function_proto, nfunctions as usize)
+            >> functions: count!(parse_function_proto, nfunctions as usize)
             >> stack_size: le_u64
             >> is_generator: le_u8
             >> var_params: le_u64
             >> (FunctionProto {
                 literals,
-                instructions
+                instructions,
+                functions
             })
     )
 );
@@ -89,15 +100,6 @@ named!(
 );
 
 named!(parse_defaultparam<()>, do_parse!((())));
-
-#[derive(Debug)]
-struct Instruction {
-    op: u8,
-    arg0: u8,
-    arg1: u32,
-    arg2: u8,
-    arg3: u8,
-}
 
 named!(
     parse_instruction<Instruction>,
