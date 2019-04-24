@@ -119,11 +119,13 @@ named!(
     )
 );
 
+const OT_STRING: u32 = 0x08000010;
+
 named!(
     parse_object<String>,
     do_parse!(
         s: switch!(le_u32,
-        0x08000010 => call!(parse_string_object))
+        OT_STRING => call!(parse_string_object))
             >> (s)
     )
 );
